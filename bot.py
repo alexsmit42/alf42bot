@@ -7,7 +7,7 @@ class BotHandler:
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
  
-    def get_updates(self, offset=None, timeout=100):
+    def get_updates(self, offset=None, timeout=1):
         method = 'getUpdates'
         params = {'timeout': timeout, 'offset': offset}
         resp = requests.get(self.api_url + method, params)
@@ -22,10 +22,10 @@ class BotHandler:
  
     def get_last_update(self):
         get_result = self.get_updates()
- 
+
         if len(get_result) > 0:
             last_update = get_result[-1]
         else:
-            last_update = get_result[len(get_result)-1]
+            last_update = False
  
         return last_update
