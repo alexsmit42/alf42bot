@@ -10,6 +10,7 @@ greet_bot = BotHandler(token)
 now = datetime.datetime.now()
  
 def main():  
+    print 666666
     new_offset = None
     today = now.day
     hour = now.hour
