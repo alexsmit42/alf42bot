@@ -1,0 +1,5 @@
+git add .
+git commit -m 'procfile'
+git push -u https://github.com/alexsmit42/alf42bot
+git push heroku master
+heroku ps:scale web=1

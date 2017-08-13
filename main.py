@@ -1,38 +1,25 @@
 # -*- coding: utf-8 -*-
 
-import requests  
-import datetime
-from bot import *
+import config
+import telebot
+import os
+import random
 
-token = '423706561:AAEq3oNCBAZ02ogfTnaKpf66W9yPhw4fAts'
+bot = telebot.TeleBot(config.token)
 
-greet_bot = BotHandler(token)
-now = datetime.datetime.now()
- 
-def main():  
-    new_offset = None
-    today = now.day
-    hour = now.hour
- 
-    while True:
-        greet_bot.get_updates(new_offset)
- 
-        last_update = greet_bot.get_last_update()
+@bot.message_handler(commands=['pug'])
+def find_file_ids(message):
+	img_total = len(os.listdir('img/'))
+	img_name = random.randint(1, img_total)
 
-        if not last_update:
-            continue
-            
-        last_update_id = last_update['update_id']
-        last_chat_text = last_update['message']['text']
-        last_chat_id = last_update['message']['chat']['id']
-        last_chat_name = last_update['message']['chat']['first_name']
- 
-        greet_bot.send_message(last_chat_id, u'Привет, {} (В ответ на: {})'.format(last_chat_name, last_chat_text))
- 
-        new_offset = last_update_id + 1
- 
-if __name__ == '__main__':  
-    try:
-        main()
-    except KeyboardInterrupt:
-        exit()
+	f = open(config.img_dir +'{}.jpg'.format(img_name), 'rb')
+	msg = bot.send_photo(message.chat.id, f, None)
+	# bot.send_message(message.chat.id, msg.photo[-1].file_id, reply_to_message_id = msg.message_id)
+
+
+@bot.message_handler(content_types=['text'])
+def repeat(message):
+	bot.send_message(message.chat.id, message.text)
+
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
